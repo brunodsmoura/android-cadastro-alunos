@@ -3,6 +3,7 @@ package com.example.caelum.agendaalunos.activity.aluno;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.caelum.agendaalunos.R;
+import com.example.caelum.agendaalunos.dao.aluno.AlunoDAO;
+import com.example.caelum.agendaalunos.domain.aluno.Aluno;
+
+import java.util.List;
 
 
 public class ListaAlunosActivity extends ActionBarActivity {
@@ -21,10 +26,15 @@ public class ListaAlunosActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
+    }
 
-        String[] cargaInicial = new String[] { "Alberto", "Felipe", "Carlos", "Jeferson" };
-        ArrayAdapter<String> alunosAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_expandable_list_item_1, cargaInicial);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        List<Aluno> dadosAluno = new AlunoDAO(this).list();
+        ArrayAdapter<Aluno> alunosAdapter = new ArrayAdapter<Aluno>(this,
+                android.R.layout.simple_expandable_list_item_1, dadosAluno);
 
         ListView alunos = (ListView) findViewById(R.id.alunos);
         alunos.setAdapter(alunosAdapter);
@@ -41,7 +51,7 @@ public class ListaAlunosActivity extends ActionBarActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(ListaAlunosActivity.this, String.format(">> Posição selecionada: %d",
-                                (position + 1)),Toast.LENGTH_SHORT).show();
+                        (position + 1)),Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -55,7 +65,6 @@ public class ListaAlunosActivity extends ActionBarActivity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,4 +87,5 @@ public class ListaAlunosActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

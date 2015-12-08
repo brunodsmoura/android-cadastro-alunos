@@ -2,6 +2,7 @@ package com.example.caelum.agendaalunos.dao.aluno;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -17,7 +18,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
     private static final String TABLE = "alunos";
     private static final String DATABASE = "CAELUM";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     public AlunoDAO(Context context) {
         super(context, DATABASE, null, VERSION);
@@ -53,12 +54,27 @@ public class AlunoDAO extends SQLiteOpenHelper {
         data.put("site", aluno.getSite());
         data.put("nota", aluno.getNota());
 
-        getReadableDatabase().rawQuery(null, null);
-
         return getWritableDatabase().insert(TABLE, null, data);
     }
 
     public List<Aluno> list() {
-        return new ArrayList<>();
+        List<Aluno> alunos = new ArrayList<>();
+        Aluno auxiliar = null;
+
+        Cursor cursor = getWritableDatabase().rawQuery("SELECT * FROM " + TABLE, null);
+
+        while(cursor.moveToNext()) {
+            auxiliar = new Aluno();
+
+            auxiliar.setId(cursor.getLong(cursor.getColumnIndex("id")));
+            auxiliar.setNome(cursor.getString(cursor.getColumnIndex("nome")));
+            auxiliar.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
+            auxiliar.setSite(cursor.getString(cursor.getColumnIndex("site")));
+            auxiliar.setNota(cursor.getDouble(cursor.getColumnIndex("nota")));
+
+            alunos.add(auxiliar);
+        }
+
+        return alunos;
     }
 }
