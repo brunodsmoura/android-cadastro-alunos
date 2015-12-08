@@ -1,5 +1,6 @@
 package com.example.caelum.agendaalunos.activity.aluno;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -26,12 +27,19 @@ public class ListaAlunosActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_alunos);
+
+        ListView listaAlunos = (ListView) findViewById(R.id.alunos);
+        registerForContextMenu(listaAlunos);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        loadAlunos();
+    }
+
+    private void loadAlunos(){
         List<Aluno> dadosAluno = new AlunoDAO(this).list();
         ArrayAdapter<Aluno> alunosAdapter = new ArrayAdapter<Aluno>(this,
                 android.R.layout.simple_expandable_list_item_1, dadosAluno);
@@ -88,4 +96,28 @@ public class ListaAlunosActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        AdapterView.AdapterContextMenuInfo adapterInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        ListView listaAlunos = (ListView) findViewById(R.id.alunos);
+
+        final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(adapterInfo.position);
+
+        MenuItem deleteAction = menu.add("Deletar");
+        deleteAction.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
+
+                dao.delete(aluno);
+                dao.close();
+
+                Toast.makeText(ListaAlunosActivity.this, String.format("Aluno %s excluído com sucesso!", aluno.getNome()),
+                        Toast.LENGTH_LONG).show();
+
+                loadAlunos();
+                return true;
+            }
+        });
+    }
 }

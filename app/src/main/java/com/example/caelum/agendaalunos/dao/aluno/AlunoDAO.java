@@ -77,4 +77,13 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
         return alunos;
     }
+
+    public void delete(Aluno aluno) {
+        if(aluno == null || aluno.getId() == null) {
+            throw new NullPointerException("Id não deve ser nulo!");
+        }
+
+        String[] ids = { String.valueOf(aluno.getId()) };
+        getWritableDatabase().delete(TABLE, "id = ?", ids);
+    }
 }
