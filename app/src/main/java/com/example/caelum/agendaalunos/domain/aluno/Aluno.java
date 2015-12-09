@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class Aluno implements Serializable {
 
     private Long id;
+    private String caminhoFoto;
     private String nome;
     private String endereco;
     private String telefone;
@@ -20,6 +21,14 @@ public class Aluno implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCaminhoFoto() {
+        return caminhoFoto;
+    }
+
+    public void setCaminhoFoto(String caminhoFoto) {
+        this.caminhoFoto = caminhoFoto;
     }
 
     public String getNome() {

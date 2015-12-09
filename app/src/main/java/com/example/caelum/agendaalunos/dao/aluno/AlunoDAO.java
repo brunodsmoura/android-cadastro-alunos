@@ -18,7 +18,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
     private static final String TABLE = "alunos";
     private static final String DATABASE = "CAELUM";
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     public AlunoDAO(Context context) {
         super(context, DATABASE, null, VERSION);
@@ -31,6 +31,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
         builder.append("CREATE TABLE ").append(TABLE).append("(")
                .append("id INTEGER PRIMARY KEY, ")
                .append("nome TEXT NOT NULL, ")
+               .append("caminho_foto TEXT, ")
                .append("telefone TEXT, ")
                .append("endereco TEXT, ")
                .append("site TEXT, ")
@@ -41,8 +42,21 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE);
-        onCreate(db);
+
+        switch(oldVersion) {
+            case 1:
+                StringBuilder builder = new StringBuilder();
+                builder.append("ALTER TABLE ").append(TABLE)
+                        .append(" ADD COLUMN caminho_foto TEXT;");
+
+                db.execSQL(builder.toString());
+                break;
+
+            default:
+                db.execSQL("DROP TABLE " + TABLE);
+                onCreate(db);
+        }
+
     }
 
     public long insertOrUpdate(Aluno aluno) {
@@ -77,6 +91,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
         ContentValues data = new ContentValues();
 
+        data.put("caminho_foto", aluno.getCaminhoFoto());
         data.put("nome", aluno.getNome());
         data.put("telefone", aluno.getTelefone());
         data.put("endereco", aluno.getEndereco());
@@ -96,6 +111,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
             auxiliar = new Aluno();
 
             auxiliar.setId(cursor.getLong(cursor.getColumnIndex("id")));
+            auxiliar.setCaminhoFoto(cursor.getString(cursor.getColumnIndex("caminho_foto")));
             auxiliar.setNome(cursor.getString(cursor.getColumnIndex("nome")));
             auxiliar.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
             auxiliar.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
