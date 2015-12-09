@@ -19,6 +19,7 @@ public class FormularioHelper {
     private final EditText endereco;
     private final EditText site;
     private final RatingBar nota;
+    private Long id;
 
     public FormularioHelper(FormularioActivity activity) {
         this.activity = activity;
@@ -33,6 +34,7 @@ public class FormularioHelper {
     public Aluno toAluno(){
         Aluno novoAluno = new Aluno();
 
+        novoAluno.setId(id);
         novoAluno.setNome(String.valueOf(nome.getText()));
         novoAluno.setTelefone(String.valueOf(telefone.getText()));
         novoAluno.setEndereco(String.valueOf(endereco.getText()));
@@ -40,6 +42,22 @@ public class FormularioHelper {
         novoAluno.setNota(Double.valueOf(nota.getRating()));
 
         return novoAluno;
+    }
+
+    public void showAluno(Aluno aluno) {
+        if(aluno == null || aluno.getId() == null) {
+            throw new NullPointerException("Aluno não pode ser nulo.");
+        }
+
+        id = aluno.getId();
+        nome.setText(aluno.getNome());
+        telefone.setText(aluno.getTelefone());
+        endereco.setText(aluno.getEndereco());
+        site.setText(aluno.getSite());
+
+        if(aluno.getNota() != null) {
+            nota.setRating(aluno.getNota().floatValue());
+        }
     }
 
     public boolean validate(){

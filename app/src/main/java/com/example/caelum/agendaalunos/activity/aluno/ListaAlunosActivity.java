@@ -24,6 +24,8 @@ import java.util.List;
 
 public class ListaAlunosActivity extends ActionBarActivity {
 
+    public static final String EXTRA_ALUNO_SELECIONADO = "alunoSelecionado";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +53,12 @@ public class ListaAlunosActivity extends ActionBarActivity {
         alunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String alunoSelecionado = String.valueOf(parent.getItemAtPosition(position));
-                Toast.makeText(ListaAlunosActivity.this, alunoSelecionado, Toast.LENGTH_LONG).show();
+                Intent edicao = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+
+                Aluno aluno = (Aluno) parent.getItemAtPosition(position);
+                edicao.putExtra(EXTRA_ALUNO_SELECIONADO, aluno);
+
+                startActivity(edicao);
             }
         });
 

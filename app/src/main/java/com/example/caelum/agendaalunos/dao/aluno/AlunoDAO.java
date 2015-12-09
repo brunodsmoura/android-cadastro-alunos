@@ -46,6 +46,24 @@ public class AlunoDAO extends SQLiteOpenHelper {
     }
 
     public long insert(Aluno aluno) {
+        ContentValues data = toContentValue(aluno);
+
+        return getWritableDatabase().insert(TABLE, null, data);
+    }
+
+    public void update(Aluno aluno) {
+        ContentValues data = toContentValue(aluno);
+        //TODO adicionar validacao de ID nulo
+
+        String[] ids = { String.valueOf(aluno.getId()) };
+        getWritableDatabase().update(TABLE, data, "id = ?", ids);
+    }
+
+    private ContentValues toContentValue(Aluno aluno){
+        if(aluno == null) {
+            throw new NullPointerException("Aluno não pode ser nulo.");
+        }
+
         ContentValues data = new ContentValues();
 
         data.put("nome", aluno.getNome());
@@ -54,7 +72,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
         data.put("site", aluno.getSite());
         data.put("nota", aluno.getNota());
 
-        return getWritableDatabase().insert(TABLE, null, data);
+        return data;
     }
 
     public List<Aluno> list() {
@@ -68,6 +86,7 @@ public class AlunoDAO extends SQLiteOpenHelper {
 
             auxiliar.setId(cursor.getLong(cursor.getColumnIndex("id")));
             auxiliar.setNome(cursor.getString(cursor.getColumnIndex("nome")));
+            auxiliar.setTelefone(cursor.getString(cursor.getColumnIndex("telefone")));
             auxiliar.setEndereco(cursor.getString(cursor.getColumnIndex("endereco")));
             auxiliar.setSite(cursor.getString(cursor.getColumnIndex("site")));
             auxiliar.setNota(cursor.getDouble(cursor.getColumnIndex("nota")));

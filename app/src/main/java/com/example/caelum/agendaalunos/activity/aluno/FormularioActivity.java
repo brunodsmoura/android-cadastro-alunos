@@ -25,6 +25,12 @@ public class FormularioActivity extends ActionBarActivity {
         setContentView(R.layout.form);
 
         this.helper = new FormularioHelper(this);
+
+        if(getIntent().hasExtra(ListaAlunosActivity.EXTRA_ALUNO_SELECIONADO)) {
+            Aluno alunoSelecionado = (Aluno) getIntent().getSerializableExtra(ListaAlunosActivity.EXTRA_ALUNO_SELECIONADO);
+
+            this.helper.showAluno(alunoSelecionado);
+        }
     }
 
     @Override
@@ -39,15 +45,27 @@ public class FormularioActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.form_menu_salvar) {
-            if(helper.validate()) {
-                Aluno novoAluno = helper.toAluno();
-                AlunoDAO dao = new AlunoDAO(this);
+            Aluno novoAluno = helper.toAluno();
+            AlunoDAO dao = new AlunoDAO(this);
 
-                long id = dao.insert(novoAluno);
+            long id = 0l;
+            String mensagemSucesso = null;
+
+            if(helper.validate()) {
+
+                if(novoAluno.getId() == null) {
+                    id = dao.insert(novoAluno);
+                    mensagemSucesso = String.format("Aluno: %d - %s inserido com sucesso", id, novoAluno.getNome());
+                } else {
+                    dao.update(novoAluno);
+
+                    id = novoAluno.getId();
+                    mensagemSucesso = String.format("Aluno: %d - %s atualizado com sucesso", id, novoAluno.getNome());
+                }
+
                 dao.close();
 
-                Toast.makeText(FormularioActivity.this, String.format("Aluno: %d - %s inserido com sucesso",
-                                id, novoAluno.getNome()),Toast.LENGTH_LONG).show();
+                Toast.makeText(FormularioActivity.this, mensagemSucesso,Toast.LENGTH_LONG).show();
 
                 finish();
             }
