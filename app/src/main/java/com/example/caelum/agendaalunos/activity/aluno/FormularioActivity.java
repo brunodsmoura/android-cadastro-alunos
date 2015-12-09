@@ -45,27 +45,15 @@ public class FormularioActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.form_menu_salvar) {
-            Aluno novoAluno = helper.toAluno();
+            Aluno alunoAuxiliar = helper.toAluno();
             AlunoDAO dao = new AlunoDAO(this);
 
-            long id = 0l;
-            String mensagemSucesso = null;
-
             if(helper.validate()) {
-
-                if(novoAluno.getId() == null) {
-                    id = dao.insert(novoAluno);
-                    mensagemSucesso = String.format("Aluno: %d - %s inserido com sucesso", id, novoAluno.getNome());
-                } else {
-                    dao.update(novoAluno);
-
-                    id = novoAluno.getId();
-                    mensagemSucesso = String.format("Aluno: %d - %s atualizado com sucesso", id, novoAluno.getNome());
-                }
-
+                long id = dao.insertOrUpdate(alunoAuxiliar);
                 dao.close();
 
-                Toast.makeText(FormularioActivity.this, mensagemSucesso,Toast.LENGTH_LONG).show();
+                Toast.makeText(FormularioActivity.this, String.format("Aluno: %d - %s persistido com sucesso",
+                        id, alunoAuxiliar.getNome()),Toast.LENGTH_LONG).show();
 
                 finish();
             }

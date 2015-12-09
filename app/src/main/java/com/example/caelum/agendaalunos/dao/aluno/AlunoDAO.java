@@ -45,23 +45,34 @@ public class AlunoDAO extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public long insertOrUpdate(Aluno aluno) {
+        return (aluno != null && aluno.getId() == null) ? insert(aluno) : update(aluno);
+    }
+
     public long insert(Aluno aluno) {
         ContentValues data = toContentValue(aluno);
+        if(data == null) {
+            throw new NullPointerException("Instancia de aluno nao deve ser nula.");
+        }
 
         return getWritableDatabase().insert(TABLE, null, data);
     }
 
-    public void update(Aluno aluno) {
+    public long update(Aluno aluno) {
         ContentValues data = toContentValue(aluno);
-        //TODO adicionar validacao de ID nulo
+        if(data == null || aluno.getId() == null) {
+            throw new NullPointerException("Instancia de aluno nao deve ser nula.");
+        }
 
         String[] ids = { String.valueOf(aluno.getId()) };
         getWritableDatabase().update(TABLE, data, "id = ?", ids);
+
+        return aluno.getId();
     }
 
     private ContentValues toContentValue(Aluno aluno){
         if(aluno == null) {
-            throw new NullPointerException("Aluno não pode ser nulo.");
+            return null;
         }
 
         ContentValues data = new ContentValues();
