@@ -3,6 +3,7 @@ package com.example.caelum.agendaalunos.activity.aluno;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
@@ -135,5 +136,26 @@ public class ListaAlunosActivity extends ActionBarActivity {
                 return true;
             }
         });
+
+        // FUNCIONALIDADE PARA FAZER UMA LIGACAO
+        MenuItem ligar = menu.add("Ligar");
+        Intent intentLigar = new Intent(Intent.ACTION_CALL);
+
+        intentLigar.setData(Uri.parse(String.format("tel:%s", aluno.getTelefone())));
+        ligar.setIntent(intentLigar);
+
+        // FUNCIONALIDADE PARA ABRIR O MAPA
+        MenuItem abrirMapa = menu.add("Mapa");
+        Intent intentMapa = new Intent(Intent.ACTION_VIEW);
+
+        intentMapa.setData(Uri.parse(String.format("geo:%s,%s&z=14&q=%s", "0", "0", aluno.getEndereco())));
+        abrirMapa.setIntent(intentMapa);
+
+        // FUNCIONALIDADE PARA ABRIR O BROWSER
+        MenuItem navegar = menu.add("Navegar no site");
+        Intent intentSite = new Intent(Intent.ACTION_VIEW);
+
+        intentSite.setData(Uri.parse("http:"+aluno.getSite()));
+        navegar.setIntent(intentSite);
     }
 }
