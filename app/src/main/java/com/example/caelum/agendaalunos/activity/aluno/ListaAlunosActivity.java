@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.caelum.agendaalunos.R;
+import com.example.caelum.agendaalunos.adapter.aluno.AlunoAdapter;
 import com.example.caelum.agendaalunos.dao.aluno.AlunoDAO;
 import com.example.caelum.agendaalunos.domain.aluno.Aluno;
 
@@ -44,9 +45,12 @@ public class ListaAlunosActivity extends ActionBarActivity {
     }
 
     private void loadAlunos(){
-        List<Aluno> dadosAluno = new AlunoDAO(this).list();
-        ArrayAdapter<Aluno> alunosAdapter = new ArrayAdapter<Aluno>(this,
-                android.R.layout.simple_expandable_list_item_1, dadosAluno);
+        AlunoDAO dao = new AlunoDAO(this);
+
+        List<Aluno> dadosAluno = dao.list();
+        dao.close();
+
+        AlunoAdapter alunosAdapter = new AlunoAdapter(this, dadosAluno);
 
         ListView alunos = (ListView) findViewById(R.id.alunos);
         alunos.setAdapter(alunosAdapter);
