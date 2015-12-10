@@ -22,6 +22,7 @@ import com.example.caelum.agendaalunos.client.aluno.AlunoClient;
 import com.example.caelum.agendaalunos.converter.aluno.AlunoConverter;
 import com.example.caelum.agendaalunos.dao.aluno.AlunoDAO;
 import com.example.caelum.agendaalunos.domain.aluno.Aluno;
+import com.example.caelum.agendaalunos.task.async.aluno.AlunoAsync;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,30 +113,7 @@ public class ListaAlunosActivity extends ActionBarActivity {
 
         // Media
         if(id == R.id.action_media) {
-            AlunoDAO dao = new AlunoDAO(this);
-            List<Aluno> alunos = dao.list();
-            dao.close();
-
-            String jsonAlunos = new AlunoConverter().toJson(alunos);
-            String response = new AlunoClient().send(jsonAlunos);
-
-            if(response != null && !response.isEmpty()) {
-                JSONObject parsedResponse = null;
-
-                try {
-                    parsedResponse = new JSONObject(response);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-
-                    Toast.makeText(this, "Erro ao traduzir resposta do servidor.", Toast.LENGTH_LONG).show();
-                    return true;
-                }
-
-                Toast.makeText(this, String.format("A média das notas da classe é: %s - Total de Alunos: %s",
-                        parsedResponse.optString("media", "0"), parsedResponse.optString("quantidade", "0")),
-                            Toast.LENGTH_LONG).show();
-            }
-
+            new AlunoAsync(this).execute();
             return true;
         }
 
