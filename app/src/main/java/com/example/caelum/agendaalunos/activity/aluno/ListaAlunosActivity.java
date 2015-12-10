@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.caelum.agendaalunos.R;
 import com.example.caelum.agendaalunos.adapter.aluno.AlunoAdapter;
+import com.example.caelum.agendaalunos.client.aluno.AlunoClient;
+import com.example.caelum.agendaalunos.converter.aluno.AlunoConverter;
 import com.example.caelum.agendaalunos.dao.aluno.AlunoDAO;
 import com.example.caelum.agendaalunos.domain.aluno.Aluno;
 
@@ -102,6 +104,19 @@ public class ListaAlunosActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        // Media
+        if(id == R.id.action_media) {
+            AlunoDAO dao = new AlunoDAO(this);
+            List<Aluno> alunos = dao.list();
+            dao.close();
+
+            String jsonAlunos = new AlunoConverter().toJson(alunos);
+            String response = new AlunoClient().send(jsonAlunos);
+
+            Toast.makeText(this, String.format("A média das notas da classe é: %s", response), Toast.LENGTH_LONG).show();
             return true;
         }
 
