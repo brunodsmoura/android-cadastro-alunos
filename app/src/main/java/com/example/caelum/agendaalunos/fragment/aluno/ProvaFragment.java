@@ -35,7 +35,7 @@ public class ProvaFragment extends Fragment {
         listViewProvas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Prova selecionada = (Prova) parent.getSelectedItem();
+                Prova selecionada = (Prova) parent.getItemAtPosition(position);
 
                 Toast.makeText(getActivity(), String.format("Prova Selecionada: %s", selecionada.getNome()),
                         Toast.LENGTH_LONG).show();

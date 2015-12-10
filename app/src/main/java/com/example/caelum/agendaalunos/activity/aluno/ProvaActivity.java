@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 
 import com.example.caelum.agendaalunos.R;
+import com.example.caelum.agendaalunos.fragment.aluno.DetalhesProvaFragment;
 import com.example.caelum.agendaalunos.fragment.aluno.ProvaFragment;
 
 /**
@@ -21,6 +22,15 @@ public class ProvaActivity extends ActionBarActivity {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_prova, new ProvaFragment());
+
+        if(isTablet()) {
+            transaction.replace(R.id.frame_detalhe_prova, new DetalhesProvaFragment());
+        }
+
         transaction.commit();
+    }
+
+    private boolean isTablet(){
+        return getResources().getBoolean(R.bool.landscape);
     }
 }
