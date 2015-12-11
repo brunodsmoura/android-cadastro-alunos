@@ -30,7 +30,7 @@ public class ProvaActivity extends ActionBarActivity {
         transaction.commit();
     }
 
-    private boolean isTablet(){
+    public boolean isTablet(){
         return getResources().getBoolean(R.bool.landscape);
     }
 }

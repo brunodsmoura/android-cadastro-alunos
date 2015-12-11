@@ -3,6 +3,7 @@ package com.example.caelum.agendaalunos.fragment.aluno;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.caelum.agendaalunos.R;
+import com.example.caelum.agendaalunos.activity.aluno.ProvaActivity;
 import com.example.caelum.agendaalunos.domain.aluno.Prova;
 
 import java.util.Arrays;
@@ -36,9 +38,23 @@ public class ProvaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Prova selecionada = (Prova) parent.getItemAtPosition(position);
+                ProvaActivity activity = (ProvaActivity) getActivity();
 
-                Toast.makeText(getActivity(), String.format("Prova Selecionada: %s", selecionada.getNome()),
-                        Toast.LENGTH_LONG).show();
+                Bundle arguments = new Bundle();
+                arguments.putSerializable("prova", selecionada);
+
+                DetalhesProvaFragment detalhesFragment = new DetalhesProvaFragment();
+                detalhesFragment.setArguments(arguments);
+
+                int frameChanged = R.id.frame_prova;
+
+                if(activity.isTablet()) {
+                    frameChanged = R.id.frame_detalhe_prova;
+                }
+
+                FragmentTransaction tx = activity.getSupportFragmentManager().beginTransaction();
+                tx.replace(frameChanged, detalhesFragment);
+                tx.commit();
             }
         });
 

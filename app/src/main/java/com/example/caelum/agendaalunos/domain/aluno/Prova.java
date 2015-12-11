@@ -1,11 +1,12 @@
 package com.example.caelum.agendaalunos.domain.aluno;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by android5843 on 10/12/15.
  */
-public class Prova {
+public class Prova implements Serializable {
 
     private String nome;
     private String data;
