@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.caelum.agendaalunos.dao.aluno.AlunoDAO;
 import com.example.caelum.agendaalunos.domain.aluno.Aluno;
+import com.example.caelum.agendaalunos.listener.CustomLocationListener;
 import com.example.caelum.agendaalunos.util.LocalizadorUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,5 +48,7 @@ public class MapFragment extends SupportMapFragment {
 
         LatLng caelumLatLng = new LatLng(-23.588305, -46.632395);
         currentMap.moveCamera(CameraUpdateFactory.newLatLngZoom(caelumLatLng, 14));
+
+        new CustomLocationListener(getActivity(), this);
     }
 }
