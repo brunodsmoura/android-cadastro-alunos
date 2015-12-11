@@ -54,6 +54,7 @@ public class ProvaFragment extends Fragment {
 
                 FragmentTransaction tx = activity.getSupportFragmentManager().beginTransaction();
                 tx.replace(frameChanged, detalhesFragment);
+                tx.addToBackStack(null);
                 tx.commit();
             }
         });
